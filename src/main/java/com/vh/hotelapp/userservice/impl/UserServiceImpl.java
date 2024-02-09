@@ -7,6 +7,7 @@ import com.vh.hotelapp.userservice.services.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,8 @@ public class UserServiceImpl implements UserService {
 
 //    private Logger logger = (Logger) LoggerFactory.getLogger(UserServiceImpl.class);
 
-//    @Autowired
-//    private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public User saveUser(User user) {
         String randomUserId = UUID.randomUUID().toString();
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
     public User getUser(String user_id) {
         User user =  userRepository.findById(user_id)
                              .orElseThrow(() -> new ResourceNotFoundException("User Not found with user id " + user_id));
+
+        ArrayList arrayList = restTemplate.getForObject("http://localhost:8084/ratings/users/2a749318-ee68-4b24-aec2-1eba7b64fb3c",ArrayList.class);
+//        logger.info("---- "+ arrayList);
+        System.out.println("---- " + arrayList);
         return user;
 
     }
